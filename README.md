@@ -1,7 +1,24 @@
-# Express Starter
+# Messenger App
 
-This starter repo will be used for building applications using React, Material-UI, React-Router, Node, & Express.js.
+A simple React + Express messenger app.
 
-## Getting started
+## Server Development Setup
 
-The project is broken down into a client and server folder.
+*Required: Postgres, Node*
+
+First, create or update an .env file in the root of the /server directory with the following:
+
+```
+DB_NAME=messenger_db
+DB_USER=your_pg_username
+DB_PASS=your_pg_password
+```
+
+Then, from the /server directory, run the following:
+
+```
+npm i                   # install dependencies
+createdb messenger_db   # create new postgres database
+npm run db:init         # create tables from db models
+npm run dev             # start the development server
+```
