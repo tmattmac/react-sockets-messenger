@@ -4,8 +4,6 @@ const { join } = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 
-const indexRouter = require("./routes/index");
-const pingRouter = require("./routes/ping");
 const authRouter = require("./routes/auth");
 
 const { json, urlencoded } = express;
