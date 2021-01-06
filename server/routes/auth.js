@@ -44,7 +44,10 @@ router.post("/register", async (req, res, next) => {
       { username: user.username },
       process.env.SECRET_KEY
     );
-    res.cookie('token', token).send({ message: "New account successfully created." });
+    res
+      .cookie('token', token)
+      .status(201)
+      .send({ message: "New account successfully created." });
   } catch (err) {
     err.status = 400;
     next(err);
