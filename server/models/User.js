@@ -8,8 +8,9 @@ class User extends Model {
    * given a username and password, return the user if found and password
    * matches; throws an error otherwise
    */
-  static authenticate(username, password) {
-    const user = User.findByPk(username);
+  static async authenticate(username, password) {
+    const user = await User.findByPk(username);
+
     if (!user) {
       throw new Error("A user with that username could not be found.");
     }
@@ -24,12 +25,18 @@ User.init({
   email: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true
+    unique: {
+      args: true,
+      msg: "That email address has been taken."
+    }
   },
   username: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
+    unique: {
+      args: true,
+      msg: "That username has been taken."
+    },
     primaryKey: true
   },
   password: {
