@@ -8,6 +8,7 @@ const LoginForm = () => {
   const classes = useFormStyles();
   const [formData, updateFormData, errors, addError] = useFormData(['email', 'username', 'password']);
   const { setUser } = useContext(getContext('user'));
+  const setError = useContext(getContext('setError'));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,16 +26,11 @@ const LoginForm = () => {
     else {
       const data = await res.json();
       if (data.error) {
-        if (data.error.message.indexOf('username') >= 0) {
-          addError('username', data.error.message);
-        }
-        if (data.error.message.indexOf('password') >= 0) {
-          addError('password', data.error.message)
-        }
+        setError(data.error.message);
       }
       else {
         // some other unexpected error happened
-        addError('username', 'Something went wrong. Try again later.')
+        setError('Something went wrong. Try again later.')
       }
     }
   }

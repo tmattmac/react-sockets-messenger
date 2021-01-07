@@ -4,18 +4,22 @@ import { BrowserRouter } from "react-router-dom";
 import Routes from './Routes';
 import { theme } from "./themes/theme";
 import AuthProvider from "./components/providers/AuthProvider";
-
+import ErrorProvider from "./components/providers/ErrorProvider";
+import ErrorSnackbar from "./components/ErrorSnackbar";
 
 
 function App() {
   return (
     <MuiThemeProvider theme={theme}>
-      <AuthProvider>
-        <CssBaseline />
-        <BrowserRouter>
-          <Routes />
-        </BrowserRouter>
-      </AuthProvider>
+      <ErrorProvider>
+        <AuthProvider>
+          <CssBaseline />
+          <BrowserRouter>
+            <Routes />
+          </BrowserRouter>
+        </AuthProvider>
+        <ErrorSnackbar />
+      </ErrorProvider>
     </MuiThemeProvider>
   );
 }
