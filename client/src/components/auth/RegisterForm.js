@@ -3,18 +3,16 @@ import React, { useContext } from 'react';
 import getContext from '../../contexts/getContext';
 import useFormData from '../../hooks/useFormData';
 import useFormStyles from './formStyles';
-import Validator from 'validatorjs'
+import Validator from 'validatorjs';
 
 const RegisterForm = () => {
   const classes = useFormStyles();
   const [formData, updateFormData, errors, addError] = useFormData(['email', 'username', 'password']);
   const { setUser } = useContext(getContext('user'));
+  const setError = useContext(getContext('setError'));
 
   const handleSubmit = async (e) => {
-    console.log('submission');
     e.preventDefault();
-    // TODO: Validate, send request to API, redirect on success, handle error
-    // validate incoming data
     const rules = {
       username: 'alpha_dash|min:3|required',
       password: 'min:6|required',
@@ -43,17 +41,11 @@ const RegisterForm = () => {
     else {
       const data = await res.json();
       if (data.error) {
-        // TODO: Handle server-side form validation errors too
-        if (data.error.message.indexOf('username') >= 0) {
-          addError('username', data.error.message);
-        }
-        if (data.error.message.indexOf('email') >= 0) {
-          addError('email', data.error.message)
-        }
+        setError(data.error.message);
       }
       else {
         // some other unexpected error happened
-        addError('username', 'Something went wrong. Try again later.')
+        setError('Something went wrong. Try again later.')
       }
     }
   }

@@ -6,19 +6,24 @@ import { theme } from "./themes/theme";
 import AuthProvider from "./components/providers/AuthProvider";
 import MessagesProvider from "./components/providers/MessagesProvider";
 
+import ErrorProvider from "./components/providers/ErrorProvider";
+import ErrorSnackbar from "./components/ErrorSnackbar";
 
 
 function App() {
   return (
     <MuiThemeProvider theme={theme}>
-      <AuthProvider>
-        <MessagesProvider>
-          <CssBaseline />
-          <BrowserRouter>
-            <Routes />
-          </BrowserRouter>
-        </MessagesProvider>
-      </AuthProvider>
+      <ErrorProvider>
+        <AuthProvider>
+          <MessagesProvider>
+            <CssBaseline />
+            <BrowserRouter>
+              <Routes />
+            </BrowserRouter>
+          </MessagesProvider>
+        </AuthProvider>
+        <ErrorSnackbar />
+      </ErrorProvider>
     </MuiThemeProvider>
   );
 }
