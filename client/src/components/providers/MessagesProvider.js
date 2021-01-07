@@ -1,5 +1,5 @@
 import { Backdrop, CircularProgress } from '@material-ui/core';
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import getContext from '../../contexts/getContext';
 
 // TODO: Remove
@@ -9,7 +9,7 @@ const MessagesProvider = ({ children }) => {
 
   const { user } = useContext(getContext('user'));
 
-  const MessagesContext = getContext('messages');
+  const MessagesContext = getContext('conversations');
 
   const [conversations, setConversations] = useState();
   const [loading, setLoading] = useState(true);
@@ -25,10 +25,11 @@ const MessagesProvider = ({ children }) => {
           read: conversation.read,
           users: conversation.users.filter(username => username !== user),
           hydrated: false,
-          messages: { ...conversation.lastMessage }
+          messages: [{ ...conversation.lastMessage }]
         }
-        setConversations(conversations);
-      }, {});
+        return acc;
+        }, {});
+      setConversations(conversations);
       setLoading(false);
     }, 1000);
   }, []);
