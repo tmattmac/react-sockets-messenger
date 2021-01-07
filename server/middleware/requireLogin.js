@@ -11,4 +11,4 @@ const requireLogin = (req, res, next) => {
   }
 }
 
-export default requireLogin;
+module.exports = requireLogin;
