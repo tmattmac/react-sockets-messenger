@@ -4,7 +4,7 @@ const Validator = require('validatorjs');
 const jwt = require('jsonwebtoken');
 const express = require("express");
 const router = express.Router();
-
+const requireLogin = require('../middleware/requireLogin');
 
 router.post("/login", async (req, res, next) => {
   const { username, password } = req.body;
@@ -14,7 +14,12 @@ router.post("/login", async (req, res, next) => {
       { username: user.username },
       process.env.SECRET_KEY
     );
-    res.cookie('token', token).send({ message: "Successfully logged in." });
+    res
+      .cookie('token', token, { HttpOnly: true })
+      .send({
+        message: "Successfully logged in.",
+        username
+      });
   } catch (err) {
     err.status = 401;
     next(err);
@@ -45,13 +50,25 @@ router.post("/register", async (req, res, next) => {
       process.env.SECRET_KEY
     );
     res
-      .cookie('token', token)
+      .cookie('token', token, { HttpOnly: true })
       .status(201)
-      .send({ message: "New account successfully created." });
+      .send({
+        message: "New account successfully created.",
+        username
+      });
   } catch (err) {
     err.status = 400;
     next(err);
   }
-})
+});
+
+router.post("/logout", async (req, res, next) => {
+  res.clearCookie('token');
+  res.send({ message: 'Successfully logged out.' });
+});
+
+router.get("/isAuthenticated", requireLogin, async (req, res, next) => {
+  res.send({ username: res.locals.username });
+});
 
 module.exports = router;

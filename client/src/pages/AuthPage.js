@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, makeStyles } from '@material-ui/core';
+import { Box, Grid, Hidden, makeStyles } from '@material-ui/core';
 import RegisterForm from '../components/auth/RegisterForm';
 import LoginForm from '../components/auth/LoginForm';
 import HeroImage from '../components/auth/HeroImage';
@@ -7,13 +7,10 @@ import AuthHeader from '../components/auth/AuthHeader';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    display: 'flex',
-    flexDirection: 'row',
     width: '100vw'
   },
   mainContent: {
-    margin: '2em',
-    flexGrow: '2',
+    padding: '2em',
     display: 'flex',
     flexFlow: 'column nowrap',
     alignItems: 'center'
@@ -36,17 +33,21 @@ const AuthPage = ({ page = 'login' }) => {
   const classes = useStyles();
 
   return (
-    <Box className={classes.root}>
-      <HeroImage />
-      <Box className={classes.mainContent}>
+    <Grid container className={classes.root} spacing={0}>
+      <Hidden smDown>
+        <Grid item md={4}>
+          <HeroImage />
+        </Grid>
+      </Hidden>
+      <Grid item xs={12} md={8} className={classes.mainContent}>
         <Box className={classes.header}>
           <AuthHeader page={page} />
         </Box>
         <Box className={classes.formContainer}>
           {page === 'login' ? <LoginForm /> : <RegisterForm />}
         </Box>
-      </Box>
-    </Box>
+      </Grid>
+    </Grid>
   );
 }
  

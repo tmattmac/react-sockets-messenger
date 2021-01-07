@@ -22,14 +22,14 @@ const AuthHeader = ({ page }) => {
       <Typography variant="subtitle1" color="secondary">
         {page === 'login' ? `Don't have an account?` : 'Already have an account?'}
       </Typography>
-      <Link
-        component={Button}
+      <Button
+        component={Link}
         color="primary"
         className={classes.button}
         to={page === 'login' ? '/register' : '/login'}
       >
         {page === 'login' ? 'Create account' : 'Login'}
-      </Link>
+      </Button>
     </Box>
   );
 }

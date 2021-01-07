@@ -2,16 +2,24 @@ import React from "react";
 import { CssBaseline, MuiThemeProvider } from "@material-ui/core";
 import { BrowserRouter } from "react-router-dom";
 import Routes from './Routes';
-
 import { theme } from "./themes/theme";
+import AuthProvider from "./components/providers/AuthProvider";
+import ErrorProvider from "./components/providers/ErrorProvider";
+import ErrorSnackbar from "./components/ErrorSnackbar";
+
 
 function App() {
   return (
     <MuiThemeProvider theme={theme}>
-      <CssBaseline />
-      <BrowserRouter>
-        <Routes />
-      </BrowserRouter>
+      <ErrorProvider>
+        <AuthProvider>
+          <CssBaseline />
+          <BrowserRouter>
+            <Routes />
+          </BrowserRouter>
+        </AuthProvider>
+        <ErrorSnackbar />
+      </ErrorProvider>
     </MuiThemeProvider>
   );
 }
