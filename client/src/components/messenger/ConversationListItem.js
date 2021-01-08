@@ -5,10 +5,14 @@ import getContext from '../../contexts/getContext';
 const useStyles = makeStyles(theme => ({
   root: {
     marginBottom: '1em',
-    boxShadow: '0 2px 10px rgba(88, 133, 196, 0.05)'
+    boxShadow: '0 2px 10px rgba(88, 133, 196, 0.05)',
+    borderRadius: '8px'
   },
-  unread: {
-    fontWeight: 'bold'
+  bold: {
+    fontWeight: 'bold',
+  },
+  black: {
+    color: 'black'
   }
 }));
 
@@ -28,8 +32,12 @@ const ConversationListItem = ({ id }) => {
       <ListItemText
         primary={username}
         secondary={lastMessage.text}
+        classes={{
+          primary: classes.bold,
+          secondary: `${classes.bold} ${conversation.read || classes.black}`
+        }}
       />
-      {conversation.read || <Chip color="primary" label="New" />}
+      {conversation.read || <Chip color="primary" label="New" className={classes.bold} size="small" />}
     </ListItem>
   ), [conversation]);
 }
