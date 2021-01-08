@@ -11,13 +11,10 @@ class User extends Model {
   static async authenticate(username, password) {
     const user = await User.findByPk(username);
 
-    if (!user) {
-      throw new Error("A user with that username could not be found.");
+    if (user && bcrypt.compareSync(password, user.password)) {
+      return user;
     }
-    if (!bcrypt.compareSync(password, user.password)) {
-      throw new Error("The password entered was incorrect.");
-    }
-    return user;
+    throw new Error("The credentials you entered were incorrect.")
   }
 }
 
