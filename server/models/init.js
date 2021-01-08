@@ -7,14 +7,16 @@ const Conversation = require('./Conversation');
 const ConversationUser = require('./ConversationUser');
 const associations = require('./associations');
 
-if (!process.env.DB_NAME) {
-  console.error("Error: Database info not found. Did you create a .env in the root directory?");
-  process.exit(1);
-}
-
-sequelize.sync({ force: true })
-  .then(() => process.exit(0))
-  .catch((err) => {
-    console.error(err);
+if (require.main === module) {
+  if (!process.env.DB_NAME) {
+    console.error("Error: Database info not found. Did you create a .env in the root directory?");
     process.exit(1);
-  });
+  }
+
+  sequelize.sync({ force: true })
+    .then(() => process.exit(0))
+    .catch((err) => {
+      console.error(err);
+      process.exit(1);
+    });
+}
