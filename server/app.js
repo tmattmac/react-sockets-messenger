@@ -6,6 +6,7 @@ const logger = require("morgan");
 
 const authRouter = require("./routes/auth");
 const messagesRouter = require("./routes/messages");
+const usersRouter = require("./routes/users");
 const requireLogin = require("./middleware/requireLogin");
 
 const { json, urlencoded } = express;
@@ -20,6 +21,7 @@ app.use(express.static(join(__dirname, "public")));
 
 app.use("/auth", authRouter);
 app.use("/api/messages", requireLogin, messagesRouter);
+app.use("/api/users", requireLogin, usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
