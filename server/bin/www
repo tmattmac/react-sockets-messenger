@@ -87,3 +87,9 @@ function onListening() {
 
   console.log("Listening on " + bind);
 }
+
+/**
+ * Initialize db on startup
+ */
+
+require('../models/init');
