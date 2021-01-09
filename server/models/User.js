@@ -9,7 +9,7 @@ class User extends Model {
    * matches; throws an error otherwise
    */
   static async authenticate(username, password) {
-    const user = await User.findByPk(username);
+    const user = await User.scope('all').findByPk(username);
 
     if (user && bcrypt.compareSync(password, user.password)) {
       return user;
@@ -46,7 +46,13 @@ User.init({
   }
 }, {
   sequelize,
-  modelName: 'User'
+  modelName: 'user',
+  scopes: {
+    all: { attributes: { exclude: [] } }
+  },
+  defaultScope: {
+    attributes: ['username']
+  }
 });
 
 module.exports = User;

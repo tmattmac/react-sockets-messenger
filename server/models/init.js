@@ -1,10 +1,6 @@
 require('dotenv').config();
 
 const sequelize = require('./db');
-const User = require('./User');
-const Message = require('./Message');
-const Conversation = require('./Conversation');
-const ConversationUser = require('./ConversationUser');
 const associations = require('./associations');
 
 if (require.main === module) {

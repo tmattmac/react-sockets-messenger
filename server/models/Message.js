@@ -1,10 +1,21 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('./db');
 
-const Message = sequelize.define('Message', {
+const Message = sequelize.define('message', {
   text: {
     type: DataTypes.STRING,
     allowNull: false
+  }
+}, {
+    scopes: {
+      ordered: {
+        order: [['createdAt', 'ASC']]
+      },
+      last: {
+        order: [['createdAt', 'DESC']],
+        limit: 1,
+        required: true
+    }
   }
 });
 

@@ -6,10 +6,19 @@ const ConversationUser = require('./ConversationUser');
 User.hasMany(Message, {
   foreignKey: 'fromUser'
 });
-Message.belongsTo(User);
+Message.belongsTo(User, {
+  foreignKey: 'fromUser'
+});
 
-Conversation.hasMany(Message);
+Conversation.hasMany(Message, {
+  foreignKey: 'conversationId'
+});
 Message.belongsTo(Conversation);
 
-User.belongsToMany(Conversation, { through: ConversationUser });
-Conversation.belongsToMany(User, { through: ConversationUser });
+User.belongsToMany(Conversation, {
+  foreignKey: 'username',
+  through: { model: ConversationUser, as: 'readStatus' }
+});
+Conversation.belongsToMany(User,
+  { through: { model: ConversationUser, as: 'readStatus' } }
+);
