@@ -6,11 +6,10 @@ const ConversationUser = require('../ConversationUser');
 
 async function getConversations(username) {
   const user = await User.findByPk(username, {
+    order: [[Conversation, 'updatedAt', 'DESC']],
     include: [{
       model: Conversation,
       attributes: ['id'],
-      order: [[fn('max', col('$messages.createdAt$')), 'ASC']],
-      group: ['id'],
       through: { attributes: ['read'], as: 'readStatus' },
       include: [{
         model: User,
@@ -20,8 +19,7 @@ async function getConversations(username) {
         through: { attributes: [] }
       },
       {
-        model: Message.scope('last'),
-        separate: true
+        model: Message.scope('last')
       }]
       
     }]

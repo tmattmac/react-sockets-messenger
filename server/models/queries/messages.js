@@ -1,7 +1,6 @@
 const { Op, fn, col, where, literal } = require('sequelize');
 const Conversation = require("../Conversation");
 const Message = require('../Message');
-const User = require("../User");
 const { getConversationByUsers } = require('./conversations');
   
 async function sendMessage(fromUser, toUsers, messageText) {
@@ -12,6 +11,9 @@ async function sendMessage(fromUser, toUsers, messageText) {
   if (!conversation) {
     conversation = await Conversation.create();
   }
+
+  // Force change to updatedAt
+  await conversation.changed('updatedAt', true);
 
   await conversation.setUsers(toUsers, { through: { read: false } });
   await conversation.addUser(fromUser, { through: { read: true } });
