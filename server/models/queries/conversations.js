@@ -24,7 +24,7 @@ async function getConversations(username) {
       
     }]
   });
-  return user.conversations;
+  return user.toJSON().conversations;
 }
 
 async function getConversationById(conversationId) {

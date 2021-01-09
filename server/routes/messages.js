@@ -12,7 +12,14 @@ router.get("/all", async (req, res, next) => {
   const { username } = res.locals;
   try {
     const conversations = await getConversations(username);
-    res.json(conversations);
+    const conversationsFormatted = conversations.map(conversation => {
+      return {
+        ...conversation,
+        users: conversation.users.map(user => user.username),
+        readStatus: conversation.readStatus.read
+      }
+    });
+    res.json({ conversations: conversationsFormatted });
   } catch (err) {
     err.status = 400;
     next(err);

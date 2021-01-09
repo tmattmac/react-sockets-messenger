@@ -11,7 +11,6 @@ async function searchUsers(username, searchTerm) {
       }
     }
   });
-  console.log(users);
   return users;
 }
 
