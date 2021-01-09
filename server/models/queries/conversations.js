@@ -1,7 +1,8 @@
-const { Op, fn, col } = require('sequelize');
+const { Op, fn, col, where, literal } = require('sequelize');
 const Conversation = require("../Conversation");
 const Message = require("../Message");
 const User = require("../User");
+const ConversationUser = require('../ConversationUser');
 
 async function getConversations(username) {
   const user = await User.findByPk(username, {

@@ -6,24 +6,18 @@ const { getConversationIdByUsers } = require('./conversations');
   
 async function sendMessage(fromUser, toUsers, messageText) {
   
-  const conversationId = getConversationIdByUsers([fromUser, ...toUsers]);
+  let conversationId = await getConversationIdByUsers([fromUser, ...toUsers]);
+  let conversation;
 
   // TODO: Look into transactions
   if (!conversationId) {
-    const users = await User.findAll({
-      where: {
-        username: {
-          [Op.in]: [fromUser, ...toUsers]
-        }
-      }
-    });
-    const conversation = await Conversation.create();
-    await conversation.setUsers(users);
+    conversation = await Conversation.create();
+    conversation.setUsers([fromUser, ...toUsers]);
     conversationId = conversation.id;
   }
-  else {
-    conversationId = conversation.id;
-  }
+
+  // await conversation.setUsers(toUsers, { through: { read: false } });
+  // await conversation.addUser(fromUser, { through: { read: true } });
 
   const message = Message.create({
     fromUser,
