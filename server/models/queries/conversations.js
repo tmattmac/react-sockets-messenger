@@ -30,7 +30,10 @@ async function getConversations(username) {
 async function getConversationById(conversationId) {
   const conversation = await Conversation.findByPk(conversationId, {
     include: [{
-      model: Message.scope('ordered')
+      model: Message.scope('ordered'),
+      attributes: {
+        exclude: ['updatedAt', 'conversationId']
+      }
     }, {
         model: User,
         through: { attributes: [] }
