@@ -43,17 +43,18 @@ async function getConversationById(conversationId) {
 }
 
 // TODO: Find a more efficient way to do this
-async function getConversationIdByUsers(usernames) {
-  let conversation = await ConversationUser.findOne({
-    attributes: [['conversationId', 'id']],
+async function getConversationByUsers(usernames) {
+  let conversationUser = await ConversationUser.findOne({
+    attributes: ['conversationId'],
     having: where(fn('array_agg', literal('"conversationUser"."username"::text')), {
       [Op.contains]: usernames,
       [Op.contained]: usernames
     }),
-    group: ['id']   
+    group: ['conversationId', 'conversation.id'],
+    include: Conversation
   });
-  if (conversation) {
-    return conversation.id;
+  if (conversationUser) {
+    return conversationUser.conversation;
   }
   return null;
 }
@@ -61,5 +62,5 @@ async function getConversationIdByUsers(usernames) {
 module.exports = {
   getConversations,
   getConversationById,
-  getConversationIdByUsers
+  getConversationByUsers
 };

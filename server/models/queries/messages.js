@@ -2,26 +2,23 @@ const { Op, fn, col, where, literal } = require('sequelize');
 const Conversation = require("../Conversation");
 const Message = require('../Message');
 const User = require("../User");
-const { getConversationIdByUsers } = require('./conversations');
+const { getConversationByUsers } = require('./conversations');
   
 async function sendMessage(fromUser, toUsers, messageText) {
   
-  let conversationId = await getConversationIdByUsers([fromUser, ...toUsers]);
-  let conversation;
+  let conversation = await getConversationByUsers([fromUser, ...toUsers]);
 
   // TODO: Look into transactions
-  if (!conversationId) {
+  if (!conversation) {
     conversation = await Conversation.create();
-    conversation.setUsers([fromUser, ...toUsers]);
-    conversationId = conversation.id;
   }
 
-  // await conversation.setUsers(toUsers, { through: { read: false } });
-  // await conversation.addUser(fromUser, { through: { read: true } });
+  await conversation.setUsers(toUsers, { through: { read: false } });
+  await conversation.addUser(fromUser, { through: { read: true } });
 
   const message = Message.create({
     fromUser,
-    conversationId,
+    conversationId: conversation.id,
     text: messageText
   });
 

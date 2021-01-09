@@ -22,3 +22,9 @@ User.belongsToMany(Conversation, {
 Conversation.belongsToMany(User,
   { through: { model: ConversationUser, as: 'readStatus' } }
 );
+
+ConversationUser.hasOne(Conversation, {
+  constraints: false,
+  foreignKey: 'id',
+  sourceKey: 'conversationId'
+});
