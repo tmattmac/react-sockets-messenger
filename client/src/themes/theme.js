@@ -31,30 +31,6 @@ export const theme = createMuiTheme({
         fontWeight: '600',
         padding: '1em 2em'
       }
-    },
-    MuiInputLabel: {
-      root: {
-        marginLeft: '0.5em'
-      },
-      shrink: {
-        transform: 'translateY(-0.75em)'
-      }
-    },
-    MuiInput: {
-      root: {
-        marginBottom: '4em'
-      },
-      input: {
-        fontWeight: '600',
-        padding: '0.75em 0.5em'
-      }
-    },
-    MuiFormHelperText: {
-      root: {
-        position: 'absolute',
-        top: '4.5em',
-        fontSize: '1em'
-      }
     }
   }
 });

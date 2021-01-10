@@ -5,7 +5,7 @@ import useFormData from '../../hooks/useFormData';
 import useFormStyles from './formStyles';
 
 const LoginForm = () => {
-  const classes = useFormStyles();
+  const [classes, textFieldProps] = useFormStyles();
   const [formData, updateFormData, errors, addError] = useFormData(['email', 'username', 'password']);
   const { setUser } = useContext(getContext('user'));
   const setError = useContext(getContext('setError'));
@@ -47,6 +47,7 @@ const LoginForm = () => {
           fullWidth
           error={Boolean(errors.username)}
           helperText={errors.username}
+          {...textFieldProps}
         />
         <TextField
           name="password"
@@ -57,6 +58,7 @@ const LoginForm = () => {
           fullWidth
           error={Boolean(errors.password)}
           helperText={errors.password}
+          {...textFieldProps}
         />
         <Button type="submit" variant="contained" color="primary" className={classes.submitFormBtn}>
           Login
