@@ -2,6 +2,7 @@ import { List, makeStyles } from '@material-ui/core';
 import React, { useContext } from 'react';
 import ConversationListItem from './ConversationListItem';
 import getContext from '../../contexts/getContext';
+import UserSearch from './UserSearch';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,6 +25,7 @@ const ConversationList = () => {
 
   return (
     <div className={classes.root}>
+      <UserSearch doSearch={console.log}/>
       <List>
         {sortedConversationIds.map(id => (
           <ConversationListItem key={id} id={id} />

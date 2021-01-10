@@ -2,9 +2,6 @@ import { Backdrop, CircularProgress } from '@material-ui/core';
 import React, { useContext, useState, useEffect } from 'react';
 import getContext from '../../contexts/getContext';
 
-// TODO: Remove
-import data from './dummy_data.json';
-
 const MessagesProvider = ({ children }) => {
 
   const { user } = useContext(getContext('user'));
@@ -16,70 +13,39 @@ const MessagesProvider = ({ children }) => {
 
   // fetch conversations on load
   useEffect(() => {
-    // for now, just populate with dummy data
-    // simulate loading with timeout
-    setTimeout(() => {
+    const fetchData = async () => {
+      const res = await fetch('/api/messages/all');
+      const data = await res.json();
       const conversations = data.conversations
         .reduce((acc, conversation) => {
-        acc[conversation.id] = {
-          read: conversation.read,
-          users: conversation.users.filter(username => username !== user),
-          hydrated: false,
-          messages: [{ ...conversation.lastMessage }]
-        }
-        return acc;
+          acc[conversation.id] = {
+            read: conversation.readStatus,
+            users: conversation.users,
+            hydrated: false,
+            messages: conversation.messages
+          }
+          return acc;
         }, {});
       setConversations(conversations);
       setLoading(false);
-    }, 1000);
+    }
+    fetchData();
   }, []);
 
   // load messages from conversation
-  const loadConversation = (id, cb) => {
-    // generate random dates for now
-    function randomDate(start, end) {
-      var date = new Date(+start + Math.random() * (end - start));
-      var hour = 0 + Math.random() * 24 | 0;
-      date.setHours(hour);
-      return date;
-    }
-    const startDate = new Date(2021, 0, 1);
-    const endDate = new Date();
-
+  const loadConversation = async (id) => {
+    const res = await fetch(`/api/messages/${id}`);
+    const data = await res.json();
     setConversations(conversations => {
       return {
         ...conversations,
         [id]: {
           ...conversations[id],
           hydrated: true,
-          messages: [
-            {
-              text: 'a message',
-              timestamp: randomDate(startDate, endDate),
-              fromUser: 'testuser'
-            },
-            {
-              text: 'second message',
-              timestamp: randomDate(startDate, endDate),
-              fromUser: conversations[id].users[0]
-            },
-            {
-              text: 'third message',
-              timestamp: randomDate(startDate, endDate),
-              fromUser: 'testuser'
-            },
-            {
-              text: 'fourth message',
-              timestamp: randomDate(startDate, endDate),
-              fromUser: conversations[id].users[0]
-            }
-
-          ].sort((a, b) => +a.timestamp - +b.timestamp)
+          messages: data.messages
         }
       }
     });
-
-    cb();
   }
 
   // TODO: Use Skeleton on messenger page components

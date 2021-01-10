@@ -1,5 +1,6 @@
 import { Avatar, Chip, ListItem, ListItemAvatar, ListItemText, makeStyles } from '@material-ui/core';
 import React, { useContext, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import getContext from '../../contexts/getContext';
 
 const useStyles = makeStyles(theme => ({
@@ -24,8 +25,8 @@ const ConversationListItem = ({ id }) => {
   const username = conversation.users[0];
   const lastMessage = conversation.messages[conversation.messages.length - 1];
 
-  return useMemo(() => (
-    <ListItem className={classes.root}>
+  return (
+    <ListItem button component={Link} to={`/messages/${id}`} className={classes.root}>
       <ListItemAvatar>
         <Avatar>{username[0].toUpperCase()}</Avatar>
       </ListItemAvatar>
@@ -37,9 +38,10 @@ const ConversationListItem = ({ id }) => {
           secondary: `${classes.bold} ${conversation.read || classes.black}`
         }}
       />
-      {conversation.read || <Chip color="primary" label="New" className={classes.bold} size="small" />}
+      {!conversation.read &&
+        <Chip color="primary" label="New" className={classes.bold} size="small" />}
     </ListItem>
-  ), [conversation]);
+  );
 }
  
 export default ConversationListItem;
