@@ -25,7 +25,7 @@ const ConversationList = () => {
 
   return (
     <div className={classes.root}>
-      <UserSearch doSearch={console.log}/>
+      <UserSearch />
       <List>
         {sortedConversationIds.map(id => (
           <ConversationListItem key={id} id={id} />
