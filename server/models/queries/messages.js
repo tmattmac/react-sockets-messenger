@@ -1,15 +1,16 @@
 const { Op, fn, col, where, literal } = require('sequelize');
 const Conversation = require("../Conversation");
 const Message = require('../Message');
-const { getConversationByUsers } = require('./conversations');
   
-async function sendMessage(fromUser, toUsers, messageText) {
+async function sendMessage(fromUser, messageText, usersOrConversationId) {
   
-  let conversation = await getConversationByUsers([fromUser, ...toUsers]);
-
-  // TODO: Look into transactions
-  if (!conversation) {
+  // TODO: Wrap in a transaction
+  let conversation;
+  if (Array.isArray(usersOrConversationId)) {
     conversation = await Conversation.create();
+  }
+  else {
+    conversation = await Conversation.findByPk(usersOrConversationId);
   }
 
   // Force change to updatedAt

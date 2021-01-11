@@ -45,18 +45,4 @@ router.get("/:conversationId", async (req, res, next) => {
   }
 });
 
-// TODO: Remove after socket-io set up
-router.post("/send", async (req, res, next) => {
-
-  try {
-    const { username: fromUser } = res.locals;
-    const { toUsers, text, conversationId } = req.body;
-    const message = await sendMessage(fromUser, toUsers, text, conversationId);
-    res.json(message);
-  } catch (err) {
-    err.status = 400;
-    next(err);
-  }
-});
-
 module.exports = router;
