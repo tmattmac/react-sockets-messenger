@@ -20,11 +20,15 @@ const auth = proxyquire('../routes/auth', {
   '../models/User': mockModels.User
 });
 
+const routes = proxyquire('../routes', {
+  './auth': auth
+})
+
 const app = proxyquire('../app.js', {
-  './routes/auth': auth
+  './routes': routes
 });
 
-describe("POST /auth/login", () => {
+describe("POST /api/auth/login", () => {
 
   context("logging in with valid credentials", () => {
 
@@ -38,7 +42,7 @@ describe("POST /auth/login", () => {
     it("should return 200 status code", done => {
       chai
         .request(app)
-        .post(`/auth/login`)
+        .post(`/api/auth/login`)
         .send(data)
         .end((err, res) => {
           expect(res.status).to.equal(200);
@@ -50,7 +54,7 @@ describe("POST /auth/login", () => {
     it("should add a cookie with a valid JWT", done => {
       chai
         .request(app)
-        .post(`/auth/login`)
+        .post(`/api/auth/login`)
         .send(data)
         .end((err, res) => {
           expect(res).to.have.cookie('token', jwt.sign({
@@ -74,7 +78,7 @@ describe("POST /auth/login", () => {
     it("should return 401 status code", done => {
       chai
         .request(app)
-        .post(`/auth/login`)
+        .post(`/api/auth/login`)
         .send(data)
         .end((err, res) => {
           console.log(res.body);
@@ -88,7 +92,7 @@ describe("POST /auth/login", () => {
     it("should not add a cookie", done => {
       chai
         .request(app)
-        .post(`/auth/login`)
+        .post(`/api/auth/login`)
         .send(data)
         .end((err, res) => {
           expect(res).not.to.have.cookie('token');
@@ -113,7 +117,7 @@ describe("POST /auth/register", () => {
     it("should return 201 status code", done => {
       chai
         .request(app)
-        .post(`/auth/register`)
+        .post(`/api/auth/register`)
         .send(data)
         .end((err, res) => {
           expect(res.status).to.equal(201);
@@ -125,7 +129,7 @@ describe("POST /auth/register", () => {
     it("should add a cookie with a valid JWT", done => {
       chai
         .request(app)
-        .post(`/auth/register`)
+        .post(`/api/auth/register`)
         .send(data)
         .end((err, res) => {
           expect(res).to.have.cookie('token', jwt.sign({
@@ -143,7 +147,7 @@ describe("POST /auth/register", () => {
     it("should return 400 status code", done => {
       chai
         .request(app)
-        .post(`/auth/register`)
+        .post(`/api/auth/register`)
         .send(data)
         .end((err, res) => {
           expect(res.status).to.equal(400);
@@ -155,7 +159,7 @@ describe("POST /auth/register", () => {
     it("should not add a cookie", done => {
       chai
         .request(app)
-        .post(`/auth/register`)
+        .post(`/api/auth/register`)
         .send(data)
         .end((err, res) => {
           expect(res).not.to.have.cookie('token');
@@ -175,7 +179,7 @@ describe("POST /auth/register", () => {
     it("should return 400 status code", done => {
       chai
         .request(app)
-        .post(`/auth/register`)
+        .post(`/api/auth/register`)
         .send(data)
         .end((err, res) => {
           expect(res.status).to.equal(400);
@@ -188,7 +192,7 @@ describe("POST /auth/register", () => {
     it("should not add a cookie", done => {
       chai
         .request(app)
-        .post(`/auth/register`)
+        .post(`/api/auth/register`)
         .send(data)
         .end((err, res) => {
           expect(res).not.to.have.cookie('token');

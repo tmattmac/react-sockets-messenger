@@ -1,14 +1,13 @@
 const { getConversations, getConversationById } = require('../models/queries/conversations');
-const { sendMessage } = require('../models/queries/messages');
 
 const express = require("express");
 const router = express.Router();
 
 /**
- * GET /api/messages/all
+ * GET /api/conversations
  * Get a list of all conversations involving logged in user
  */
-router.get("/all", async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   const { username } = res.locals;
   try {
     const conversations = await getConversations(username);
@@ -27,7 +26,7 @@ router.get("/all", async (req, res, next) => {
 });
 
 /**
- * GET /api/messages/:conversationId
+ * GET /api/conversations/:conversationId
  */
 router.get("/:conversationId", async (req, res, next) => {
   const { username } = res.locals;
