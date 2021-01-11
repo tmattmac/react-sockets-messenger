@@ -1,7 +1,7 @@
 import { CircularProgress, Typography, makeStyles } from '@material-ui/core';
 import React, { useContext, useEffect } from 'react';
 import getContext from '../../contexts/getContext';
-import { Redirect, useParams } from 'react-router-dom';
+import { Redirect, useLocation, useParams } from 'react-router-dom';
 import MessageList from './MessageList';
 import MessageForm from './MessageForm';
 
@@ -21,19 +21,32 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const MessagePane = ({ newConversation = false, toUsers }) => {
+const MessagePane = ({ newConversation = false }) => {
 
+  const location = useLocation();
   const classes = useStyles();
   const { conversationId } = useParams();
   const { conversations, loadConversation } = useContext(getContext('conversations'));
 
-
-  const conversation = conversations[conversationId];
-  const isLoaded = conversation.hydrated;
-
+  let conversation;
+  let sendMessage;
   if (newConversation) {
-
+    const users = location.state.users;
+    conversation = {
+      messages: [],
+      hydrated: true,
+      users
+    }
+    // TODO: Customize sendMessage function to send new message and forward to created conversation
   }
+  else {
+    conversation = conversations[conversationId];
+  }
+
+  sendMessage = (message) => {
+    console.log(message);
+  }
+  const isLoaded = conversation.hydrated;
 
   useEffect(() => {
     if (!isLoaded) {
@@ -41,16 +54,15 @@ const MessagePane = ({ newConversation = false, toUsers }) => {
     }
   }, [isLoaded]);
 
-  if (!newConversation && !conversations[conversationId]) {
+  if (newConversation && !conversation.users) {
+    return <Redirect to='/messages' />;
+  }
+  else if (!newConversation && !conversations[conversationId]) {
     return <Redirect to='/messages' />
   }
 
   if (!isLoaded) {
     return <CircularProgress />;
-  }
-
-  const sendMessage = (message) => {
-    console.log(message);
   }
 
   return (

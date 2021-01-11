@@ -78,8 +78,9 @@ const UserSearch = ({ live = true, delay = 500 }) => {
     // TODO: Provide some kind of loading feedback
     if (e.currentTarget.dataset && e.currentTarget.dataset.username) {
       setTerm('');
+      const username = e.currentTarget.dataset.username;
       const url = new URL('/api/conversations/withUsers', window.location.origin);
-      const params = { toUsers: [e.currentTarget.dataset.username] };
+      const params = { toUsers: [username] };
       url.search = new URLSearchParams(params).toString();
       const res = await fetch(url);
       const data = await res.json();
@@ -87,7 +88,7 @@ const UserSearch = ({ live = true, delay = 500 }) => {
         history.push(`/messages/${data.conversationId}`)
       }
       else if (res.status === 404) {
-        history.push('/messages/new')
+        history.push('/messages/new', { users: [username] })
       }
       // handle server errors at some point
     }
