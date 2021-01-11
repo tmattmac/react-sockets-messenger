@@ -4,7 +4,7 @@ const { join } = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 
-const authRouter = require("./routes/auth");
+const apiRouter = require('./routes');
 
 const { json, urlencoded } = express;
 
@@ -16,7 +16,7 @@ app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(join(__dirname, "public")));
 
-app.use("/auth", authRouter);
+app.use("/api", apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -31,6 +31,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
+  console.error(err);
   res.json({
     error: {
       status: err.status,
