@@ -20,8 +20,7 @@ import useSearch from '../../hooks/useSearch';
 
 const useStyles = makeStyles(theme => ({
   searchField: {
-    paddingRight: 0,
-    backgroundColor: "#fff",
+    fontWeight: 'bold',
     marginBottom: theme.spacing(2)
   },
   dropdown: {
@@ -77,7 +76,6 @@ const UserSearch = ({ live = true, delay = 500 }) => {
     setOpen(false);
     // get conversation ID and forward
     // TODO: Provide some kind of loading feedback
-    console.log(e.target);
     if (e.currentTarget.dataset && e.currentTarget.dataset.username) {
       setTerm('');
       const url = new URL('/api/conversations/withUsers', window.location.origin);

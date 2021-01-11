@@ -11,7 +11,7 @@ const AuthProvider = ({ children }) => {
 
   // check if user is logged in on load
   useEffect(() => {
-    fetch('/auth/isAuthenticated')
+    fetch('/api/auth/isAuthenticated')
       .then(res => res.json())
       .then(data => {
         if (data.username) {

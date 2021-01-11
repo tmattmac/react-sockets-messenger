@@ -4,7 +4,7 @@ const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 const formatTime = (date) => {
   const offsetDate = utcToZonedTime(date, timeZone);
   const formatString = 'HH:mm';
-  return format(offsetDate);
+  return format(offsetDate, formatString);
 }
 
 export default formatTime;

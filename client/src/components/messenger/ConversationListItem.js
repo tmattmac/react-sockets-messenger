@@ -2,6 +2,7 @@ import { Avatar, Chip, ListItem, ListItemAvatar, ListItemText, makeStyles } from
 import React, { useContext, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import getContext from '../../contexts/getContext';
+import clsx from 'clsx';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -14,6 +15,11 @@ const useStyles = makeStyles(theme => ({
   },
   black: {
     color: 'black'
+  },
+  ellipsis: {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
   }
 }));
 
@@ -35,7 +41,9 @@ const ConversationListItem = ({ id }) => {
         secondary={lastMessage.text}
         classes={{
           primary: classes.bold,
-          secondary: `${classes.bold} ${conversation.read || classes.black}`
+          secondary: clsx(classes.bold, classes.ellipsis, {
+            [classes.black]: !conversation.read
+          })
         }}
       />
       {!conversation.read &&
