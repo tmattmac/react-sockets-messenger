@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 import { 
   TextField, 
   InputAdornment, 
@@ -10,7 +11,8 @@ import {
   ListItemText,
   Box,
   Typography,
-  CircularProgress
+  CircularProgress,
+  ClickAwayListener
 } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
 import { debounce } from 'lodash';
@@ -30,6 +32,7 @@ const useStyles = makeStyles(theme => ({
 
 const UserSearch = ({ live = true, delay = 500 }) => {
   const classes = useStyles();
+  const history = useHistory();
 
   // configure dropdown menu
   const anchor = useRef();
@@ -70,9 +73,28 @@ const UserSearch = ({ live = true, delay = 500 }) => {
     live ? delaySearch.flush() : doSearch(term);
   }
 
-  const handleClose = (e) => {
+  const handleClose = async (e) => {
     setOpen(false);
+    // get conversation ID and forward
+    // TODO: Provide some kind of loading feedback
+    console.log(e.target);
+    if (e.currentTarget.dataset && e.currentTarget.dataset.username) {
+      setTerm('');
+      const url = new URL('/api/messages/withUsers', window.location.origin);
+      const params = { toUsers: [e.currentTarget.dataset.username] };
+      url.search = new URLSearchParams(params).toString();
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.conversationId) {
+        history.push(`/messages/${data.conversationId}`)
+      }
+      else if (res.status === 404) {
+        history.push('/messages/new')
+      }
+      // handle server errors at some point
+    }
   }
+
 
   let dropdownContent;
   if (loading) {
@@ -95,7 +117,12 @@ const UserSearch = ({ live = true, delay = 500 }) => {
     dropdownContent = (
       <List>
         {results.map(username => (
-          <ListItem button onClose={handleClose} key={username}>
+          <ListItem 
+            button 
+            onClick={handleClose} 
+            key={username} 
+            data-username={username}
+          >
             <ListItemText>{username}</ListItemText>
           </ListItem>
         ))}
@@ -112,7 +139,6 @@ const UserSearch = ({ live = true, delay = 500 }) => {
           fullWidth
           value={term}
           onChange={handleChange}
-          onBlur={handleClose}
           ref={anchor}
           InputProps={{
             className: classes.searchField,
@@ -125,23 +151,25 @@ const UserSearch = ({ live = true, delay = 500 }) => {
           }}
         />
       </form>
-      <Popper
-        anchorEl={anchor.current}
-        open={open}
-        placement="bottom-start"
-        onClose={handleClose}
-        modifiers={{
-          setWidth: {
-            enabled: true,
-            order: 849,
-            fn: setPopperWidth
-          }
-        }}
-      >
-        <Paper>
-          {dropdownContent}
-        </Paper>
-      </Popper>
+      <ClickAwayListener onClickAway={handleClose}>
+        <Popper
+          anchorEl={anchor.current}
+          open={open}
+          placement="bottom-start"
+          onClose={handleClose}
+          modifiers={{
+            setWidth: {
+              enabled: true,
+              order: 849,
+              fn: setPopperWidth
+            }
+          }}
+        >
+          <Paper>
+            {dropdownContent}
+          </Paper>
+        </Popper>
+      </ClickAwayListener>
     </>
   )
 }
