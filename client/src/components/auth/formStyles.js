@@ -35,7 +35,6 @@ const useStyles = makeStyles(theme => ({
 
 const useFormStyles = () => {
   const classes = useStyles();
-  console.log(classes);
   const textFieldProps = {
     InputProps: {
       classes: {

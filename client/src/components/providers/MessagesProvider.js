@@ -13,6 +13,7 @@ const MessagesProvider = ({ children }) => {
 
   // fetch conversations on load
   useEffect(() => {
+    setLoading(true);
     const fetchData = async () => {
       const res = await fetch('/api/conversations');
       const data = await res.json();
@@ -29,8 +30,13 @@ const MessagesProvider = ({ children }) => {
       setConversations(conversations);
       setLoading(false);
     }
-    fetchData();
-  }, []);
+    if (user) {
+      fetchData();
+    }
+    else {
+      setLoading(false);
+    }
+  }, [user]);
 
   // load messages from conversation
   const loadConversation = async (id) => {
