@@ -14,7 +14,7 @@ const MessagesProvider = ({ children }) => {
   // fetch conversations on load
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch('/api/messages/all');
+      const res = await fetch('/api/conversations');
       const data = await res.json();
       const conversations = data.conversations
         .reduce((acc, conversation) => {
@@ -34,7 +34,7 @@ const MessagesProvider = ({ children }) => {
 
   // load messages from conversation
   const loadConversation = async (id) => {
-    const res = await fetch(`/api/messages/${id}`);
+    const res = await fetch(`/api/conversations/${id}`);
     const data = await res.json();
     setConversations(conversations => {
       return {

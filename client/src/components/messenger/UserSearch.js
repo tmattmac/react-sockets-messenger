@@ -80,7 +80,7 @@ const UserSearch = ({ live = true, delay = 500 }) => {
     console.log(e.target);
     if (e.currentTarget.dataset && e.currentTarget.dataset.username) {
       setTerm('');
-      const url = new URL('/api/messages/withUsers', window.location.origin);
+      const url = new URL('/api/conversations/withUsers', window.location.origin);
       const params = { toUsers: [e.currentTarget.dataset.username] };
       url.search = new URLSearchParams(params).toString();
       const res = await fetch(url);
