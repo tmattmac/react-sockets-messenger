@@ -3,16 +3,15 @@ const {
   getConversationById,
   getConversationByUsers
 } = require('../models/queries/conversations');
-const { sendMessage } = require('../models/queries/messages');
 
 const express = require("express");
 const router = express.Router();
 
 /**
- * GET /api/messages/all
+ * GET /api/conversations
  * Get a list of all conversations involving logged in user
  */
-router.get("/all", async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   const { username } = res.locals;
   try {
     const conversations = await getConversations(username);
@@ -31,7 +30,7 @@ router.get("/all", async (req, res, next) => {
 });
 
 /**
- * GET /api/messages/withUsers
+ * GET /api/conversations/withUsers
  * get the conversation ID of a conversation with specified users,
  * return 404 otherwise
  */
@@ -55,7 +54,7 @@ router.get("/withUsers", async (req, res, next) => {
 });
 
 /**
- * GET /api/messages/:conversationId
+ * GET /api/conversations/:conversationId
  */
 router.get("/:conversationId", async (req, res, next) => {
   const { username } = res.locals;
@@ -67,20 +66,6 @@ router.get("/:conversationId", async (req, res, next) => {
       throw new Error('Unauthorized');
     }
     res.json({ messages: conversation.messages });
-  } catch (err) {
-    err.status = 400;
-    next(err);
-  }
-});
-
-// TODO: Remove after socket-io set up
-router.post("/send", async (req, res, next) => {
-
-  try {
-    const { username: fromUser } = res.locals;
-    const { toUsers, text, conversationId } = req.body;
-    const message = await sendMessage(fromUser, toUsers, text, conversationId);
-    res.json(message);
   } catch (err) {
     err.status = 400;
     next(err);
