@@ -62,7 +62,6 @@ const MessagesProvider = ({ children }) => {
    * callback called when message received via socket
    */
   const receiveMessage = useCallback(({ message, users }) => {
-    console.log('receiving message');
     addMessageToConversation(
       message.conversationId,
       message,
@@ -91,13 +90,13 @@ const MessagesProvider = ({ children }) => {
       setLoading(false);
       init(receiveMessage);
     }
-    if (user && !conversations) {
+    if (user) {
       fetchData();
     }
     else {
       setLoading(false);
     }
-  }, [user, close, init, receiveMessage]);
+  }, [user, init, receiveMessage]);
 
   // load messages from conversation
   const loadConversation = async (id) => {
