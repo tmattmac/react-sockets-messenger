@@ -3,6 +3,7 @@ import React, { useContext, useState } from 'react';
 import ConversationListItem from './ConversationListItem';
 import getContext from '../../contexts/getContext';
 import UserSearch from './UserSearch';
+import { compareDesc, parseJSON } from 'date-fns';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -43,11 +44,11 @@ const ConversationList = () => {
   const [anchor, setAnchor] = useState(null);
 
   const lastUpdated = (conversation) => {
-    return conversation.messages[conversation.messages.length - 1].timestamp;
+    return parseJSON(conversation.messages[conversation.messages.length - 1].createdAt);
   }
 
   const sortedConversationIds = Object.keys(conversations)
-    .sort((a, b) => +lastUpdated(conversations[b]) - +lastUpdated(conversations[a]));
+    .sort((a, b) => compareDesc(lastUpdated(conversations[a]), lastUpdated(conversations[b])));
   
   const handleClick = (e) => {
     setAnchor(e.currentTarget);
@@ -56,6 +57,8 @@ const ConversationList = () => {
   const handleClose = () => {
     setAnchor(null);
   }
+
+  console.log(sortedConversationIds);
 
   return (
     <div className={classes.root}>
