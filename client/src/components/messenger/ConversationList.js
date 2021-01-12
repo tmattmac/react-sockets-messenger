@@ -7,9 +7,10 @@ import { compareDesc, parseJSON } from 'date-fns';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    margin: '2em',
+    padding: '2em',
     display: 'flex',
-    flexFlow: 'column nowrap'
+    flexFlow: 'column nowrap',
+    height: '100vh'
   },
   conversationList: {
     flexGrow: 2,
