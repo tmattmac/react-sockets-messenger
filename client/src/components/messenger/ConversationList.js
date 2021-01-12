@@ -1,5 +1,5 @@
 import { Avatar, IconButton, List, makeStyles, Menu, MenuItem, Typography } from '@material-ui/core';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useMemo } from 'react';
 import ConversationListItem from './ConversationListItem';
 import getContext from '../../contexts/getContext';
 import UserSearch from './UserSearch';
@@ -47,8 +47,11 @@ const ConversationList = () => {
     return parseJSON(conversation.messages[conversation.messages.length - 1].createdAt);
   }
 
-  const sortedConversationIds = Object.keys(conversations)
-    .sort((a, b) => compareDesc(lastUpdated(conversations[a]), lastUpdated(conversations[b])));
+  const sortedConversationIds = useMemo(() => Object.keys(conversations)
+    .sort((a, b) => compareDesc(
+      lastUpdated(conversations[a]),
+      lastUpdated(conversations[b])
+    )), [conversations]);
   
   const handleClick = (e) => {
     setAnchor(e.currentTarget);
@@ -57,8 +60,6 @@ const ConversationList = () => {
   const handleClose = () => {
     setAnchor(null);
   }
-
-  console.log(sortedConversationIds);
 
   return (
     <div className={classes.root}>

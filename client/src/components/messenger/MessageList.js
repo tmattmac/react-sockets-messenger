@@ -1,5 +1,5 @@
 import { Typography, Avatar, makeStyles } from '@material-ui/core';
-import React, { useContext } from 'react';
+import React, { useContext, useRef, useLayoutEffect } from 'react';
 import getContext from '../../contexts/getContext';
 import clsx from 'clsx';
 import formatTime from '../../helpers/formatTime';
@@ -49,6 +49,12 @@ const useStyles = makeStyles(theme => ({
 const MessageList = ({ messages }) => {
   const classes = useStyles();
   const { user } = useContext(getContext('user'));
+
+  const bottomOfPage = useRef();
+
+  useLayoutEffect(() => {
+    bottomOfPage.current.scrollIntoView();
+  });
   
   return ( 
     <div className={classes.root}>
@@ -75,6 +81,7 @@ const MessageList = ({ messages }) => {
           </div>
         )
       })}
+      <div ref={bottomOfPage}></div>
     </div>
   );
 }
