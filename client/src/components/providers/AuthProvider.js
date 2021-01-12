@@ -22,7 +22,7 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   const logout = () => {
-    fetch('/auth/logout', { method: 'POST' })
+    fetch('/api/auth/logout', { method: 'POST' })
       .then(res => {
         if (res.ok) {
           setUser(null);
