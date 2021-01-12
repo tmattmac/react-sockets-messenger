@@ -15,7 +15,7 @@ router.post("/login", async (req, res, next) => {
       process.env.SECRET_KEY
     );
     res
-      .cookie('token', token, { HttpOnly: true })
+      .cookie('token', token, { httpOnly: true, secure: true })
       .send({
         message: "Successfully logged in.",
         username
@@ -50,7 +50,7 @@ router.post("/register", async (req, res, next) => {
       process.env.SECRET_KEY
     );
     res
-      .cookie('token', token, { HttpOnly: true })
+      .cookie('token', token, { httpOnly: true, secure: true })
       .status(201)
       .send({
         message: "New account successfully created.",
