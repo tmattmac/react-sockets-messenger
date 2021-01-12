@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const express = require("express");
 const router = express.Router();
 const requireLogin = require('../middleware/requireLogin');
+const { cookieOptions } = require('../config');
 
 router.post("/login", async (req, res, next) => {
   const { username, password } = req.body;
@@ -15,7 +16,7 @@ router.post("/login", async (req, res, next) => {
       process.env.SECRET_KEY
     );
     res
-      .cookie('token', token, { httpOnly: true, secure: true })
+      .cookie('token', token, cookieOptions)
       .send({
         message: "Successfully logged in.",
         username
@@ -50,7 +51,7 @@ router.post("/register", async (req, res, next) => {
       process.env.SECRET_KEY
     );
     res
-      .cookie('token', token, { httpOnly: true, secure: true })
+      .cookie('token', token, cookieOptions)
       .status(201)
       .send({
         message: "New account successfully created.",
