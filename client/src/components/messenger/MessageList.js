@@ -56,7 +56,7 @@ const MessageList = ({ messages }) => {
         const isFromUser = message.fromUser === user;
         const time = formatTime(message.createdAt);
         return (
-          <div key={message.id} className={clsx(classes.message, {
+          <div key={message.createdAt} className={clsx(classes.message, {
             [classes.rightJustify]: isFromUser
           })}>
             {!isFromUser && <Avatar className={classes.avatar}>{message.fromUser.toUpperCase()[0]}</Avatar>}
