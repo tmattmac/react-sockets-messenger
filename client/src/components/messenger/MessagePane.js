@@ -27,7 +27,12 @@ const MessagePane = ({ newConversation = false }) => {
   const history = useHistory();
   const classes = useStyles();
   const { conversationId } = useParams();
-  const { conversations, loadConversation, sendMessage: send } = useContext(getContext('conversations'));
+  const {
+    conversations,
+    loadConversation,
+    markConversationRead,
+    sendMessage: send
+  } = useContext(getContext('conversations'));
 
   let conversation;
   let sendMessage;
@@ -40,7 +45,7 @@ const MessagePane = ({ newConversation = false }) => {
     }
     sendMessage = async (text) => {
       const conversationId = await send(users, text);
-      history.push(`/messages/${conversationId}`);
+      history.replace(`/messages/${conversationId}`);
     }
   }
   else {
@@ -56,7 +61,10 @@ const MessagePane = ({ newConversation = false }) => {
     if (!isLoaded) {
       loadConversation(conversationId);
     }
-  }, [isLoaded, conversationId, loadConversation]);
+    else {
+      markConversationRead(conversationId);
+    }
+  }, [isLoaded, conversationId, loadConversation, markConversationRead]);
 
   if (newConversation && !conversation.users) {
     return <Redirect to='/messages' />;
@@ -68,6 +76,8 @@ const MessagePane = ({ newConversation = false }) => {
   if (!isLoaded) {
     return <CircularProgress />;
   }
+
+
 
   return (
     <div className={classes.root}>

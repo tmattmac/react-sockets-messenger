@@ -2,6 +2,7 @@ const io = require('socket.io')();
 const cookie = require('cookie');
 const jwt = require('jsonwebtoken');
 const { sendMessage } = require('./models/queries/messages');
+const { markConversationRead } = require('./models/queries/conversations');
 
 io.on('connection', (socket) => {
   let username;
@@ -31,6 +32,10 @@ io.on('connection', (socket) => {
 
     toUsers.reduce((io, user) => io.to(user), io).emit('receiveMessage', { message, users });
     callback({ message });
+  });
+
+  socket.on('markRead', ({ conversationId }) => {
+    markConversationRead(username, conversationId);
   });
 
 });

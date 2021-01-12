@@ -27,9 +27,11 @@ const useSocket = () => {
     return promise;
   }
 
-  const close = socket && socket.close;
+  const markRead = (conversationId) => {
+    socket.emit('markRead', { conversationId });
+  }
 
-  return [init, sendMessage, close];
+  return [init, sendMessage, markRead];
 
 }
 

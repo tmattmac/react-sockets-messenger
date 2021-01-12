@@ -11,7 +11,7 @@ const MessagesProvider = ({ children }) => {
 
   const [conversations, setConversations] = useState();
   const [loading, setLoading] = useState(true);
-  const [init, send, close] = useSocket();
+  const [init, send, markRead] = useSocket();
 
   const addMessageToConversation = useCallback((id, messageObject, users, read = true) => {
     setConversations(conversations => {
@@ -38,6 +38,21 @@ const MessagesProvider = ({ children }) => {
       }
     });
   }, []);
+
+  const markConversationRead = (conversationId) => {
+    if (!conversations[conversationId].read) {
+      markRead(conversationId);
+      setConversations(conversations => {
+        return {
+          ...conversations,
+          [conversationId]: {
+            ...conversations[conversationId],
+            read: true
+          }
+        }
+      });
+    }
+  }
 
   const sendMessage = async (toUsers, text, conversationId) => {
     if (conversations[conversationId]) {
@@ -122,7 +137,7 @@ const MessagesProvider = ({ children }) => {
   )
 
   return (
-    <MessagesContext.Provider value={{ conversations, loading, loadConversation, sendMessage }}>
+    <MessagesContext.Provider value={{ conversations, loading, loadConversation, sendMessage, markConversationRead }}>
       {children}
     </MessagesContext.Provider>
   );
