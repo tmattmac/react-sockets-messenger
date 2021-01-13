@@ -38,7 +38,6 @@ router.get("/withUsers", async (req, res, next) => {
   const { username } = res.locals;
   let { toUsers } = req.query;
   if (!Array.isArray(toUsers)) toUsers = [toUsers];
-  console.log(toUsers);
   try {
     const conversation = await getConversationByUsers([username, ...toUsers]);
     if (!conversation) {
