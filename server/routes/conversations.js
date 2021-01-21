@@ -1,4 +1,8 @@
-const { getConversations, getConversationById } = require('../models/queries/conversations');
+const {
+  getConversations,
+  getConversationById,
+  getConversationByUsers
+} = require('../models/queries/conversations');
 
 const express = require("express");
 const router = express.Router();
@@ -19,6 +23,29 @@ router.get("/", async (req, res, next) => {
       }
     });
     res.json({ conversations: conversationsFormatted });
+  } catch (err) {
+    err.status = 400;
+    next(err);
+  }
+});
+
+/**
+ * GET /api/conversations/withUsers
+ * get the conversation ID of a conversation with specified users,
+ * return 404 otherwise
+ */
+router.get("/withUsers", async (req, res, next) => {
+  const { username } = res.locals;
+  let { toUsers } = req.query;
+  if (!Array.isArray(toUsers)) toUsers = [toUsers];
+  try {
+    const conversation = await getConversationByUsers([username, ...toUsers]);
+    if (!conversation) {
+      const err = new Error('Not found');
+      err.status = 404;
+      return next(err);
+    }
+    res.json({ conversationId: conversation.id });
   } catch (err) {
     err.status = 400;
     next(err);

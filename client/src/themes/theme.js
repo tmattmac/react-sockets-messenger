@@ -14,11 +14,15 @@ export const theme = createMuiTheme({
   },
   palette: {
     primary: { main: '#3A8DFF' },
-    secondary: { main: '#B0B0B0' }
+    secondary: { main: '#B0B0B0' },
+    background: { default: 'white' }
   },
   props: {
     MuiInputLabel: {
       shrink: true
+    },
+    MuiFilledInput: {
+      disableUnderline: true
     }
   },
   overrides: {
@@ -32,28 +36,34 @@ export const theme = createMuiTheme({
         padding: '1em 2em'
       }
     },
-    MuiInputLabel: {
-      root: {
-        marginLeft: '0.5em'
-      },
-      shrink: {
-        transform: 'translateY(-0.75em)'
+    MuiInputAdornment: {
+      filled: {
+        marginTop: '0 !important',
+        color: '#B1C3DF'
       }
     },
-    MuiInput: {
-      root: {
-        marginBottom: '4em'
-      },
+    MuiFilledInput: {
       input: {
-        fontWeight: '600',
-        padding: '0.75em 0.5em'
-      }
-    },
-    MuiFormHelperText: {
+        padding: '1.5em',
+        fontWeight: 'bold',
+        color: '#333333',
+        '&::placeholder': {
+          color: '#B1C3DF',
+          opacity: '1'
+        }
+      },
+      inputAdornedStart: {
+        paddingLeft: 0
+      },
       root: {
-        position: 'absolute',
-        top: '4.5em',
-        fontSize: '1em'
+        borderRadius: '4px',
+        backgroundColor: '#E9EEF9',
+        '&:hover': {
+          backgroundColor: '#e1e8f7'
+        },
+        '&.Mui-focused': {
+          backgroundColor: '#e1e8f7'
+        }
       }
     }
   }

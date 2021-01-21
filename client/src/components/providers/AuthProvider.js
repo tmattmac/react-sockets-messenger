@@ -11,7 +11,7 @@ const AuthProvider = ({ children }) => {
 
   // check if user is logged in on load
   useEffect(() => {
-    fetch('/auth/isAuthenticated')
+    fetch('/api/auth/isAuthenticated')
       .then(res => res.json())
       .then(data => {
         if (data.username) {
@@ -22,7 +22,7 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   const logout = () => {
-    fetch('/auth/logout', { method: 'POST' })
+    fetch('/api/auth/logout', { method: 'POST' })
       .then(res => {
         if (res.ok) {
           setUser(null);

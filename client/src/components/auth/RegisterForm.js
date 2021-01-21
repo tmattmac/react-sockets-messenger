@@ -6,7 +6,7 @@ import useFormStyles from './formStyles';
 import Validator from 'validatorjs';
 
 const RegisterForm = () => {
-  const classes = useFormStyles();
+  const [classes, textFieldProps] = useFormStyles();
   const [formData, updateFormData, errors, addError] = useFormData(['email', 'username', 'password']);
   const { setUser } = useContext(getContext('user'));
   const setError = useContext(getContext('setError'));
@@ -62,6 +62,7 @@ const RegisterForm = () => {
           fullWidth
           error={Boolean(errors.username)}
           helperText={errors.username}
+          {...textFieldProps}
         />
         <TextField
           name="email"
@@ -71,6 +72,7 @@ const RegisterForm = () => {
           fullWidth
           error={Boolean(errors.email)}
           helperText={errors.email}
+          {...textFieldProps}
         />
         <TextField
           name="password"
@@ -81,6 +83,7 @@ const RegisterForm = () => {
           fullWidth
           error={Boolean(errors.password)}
           helperText={errors.password}
+          {...textFieldProps}
         />
         <Button type="submit" variant="contained" color="primary" className={classes.submitFormBtn}>
           Create
