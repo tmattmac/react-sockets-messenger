@@ -1,6 +1,7 @@
 import { Backdrop, CircularProgress } from '@material-ui/core';
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useCallback, useRef } from 'react';
 import getContext from '../../contexts/getContext';
+import useSocket from '../../hooks/useSocket';
 
 const MessagesProvider = ({ children }) => {
 
@@ -10,6 +11,79 @@ const MessagesProvider = ({ children }) => {
 
   const [conversations, setConversations] = useState();
   const [loading, setLoading] = useState(true);
+  const [init, send, markRead] = useSocket();
+
+  const addMessageToConversation = useCallback((id, messageObject, users, read = true) => {
+    setConversations(conversations => {
+      let conversation = conversations[id];
+      if (!conversation) {
+        conversation = {
+          hydrated: false,
+          read,
+          users,
+          messages: [messageObject]
+        }
+      }
+      else {
+        conversation = {
+          ...conversation,
+          read,
+          messages: [...conversation.messages, messageObject]
+        }
+      }
+
+      return {
+        ...conversations,
+        [id]: conversation
+      }
+    });
+  }, []);
+
+  const markConversationRead = (conversationId) => {
+    if (!conversations[conversationId].read) {
+      markRead(conversationId);
+      setConversations(conversations => {
+        return {
+          ...conversations,
+          [conversationId]: {
+            ...conversations[conversationId],
+            read: true
+          }
+        }
+      });
+    }
+  }
+
+  const sendMessage = async (toUsers, text, conversationId) => {
+    if (conversations[conversationId]) {
+      const id = conversationId;
+      addMessageToConversation(id, {
+        fromUser: user,
+        createdAt: new Date(),
+        text
+      });
+      send(toUsers, text, id);
+      return id;
+    }
+    else {
+      const data = await send(toUsers, text);
+      const { message } = data;
+      addMessageToConversation(message.conversationId, message, toUsers);
+      return message.conversationId;
+    }
+  }
+
+  /**
+   * callback called when message received via socket
+   */
+  const receiveMessage = useCallback(({ message, users }) => {
+    addMessageToConversation(
+      message.conversationId,
+      message,
+      users.filter(u => u !== user),
+      false
+    );
+  }, [user, addMessageToConversation]);
 
   // fetch conversations on load
   useEffect(() => {
@@ -29,6 +103,7 @@ const MessagesProvider = ({ children }) => {
         }, {});
       setConversations(conversations);
       setLoading(false);
+      init(receiveMessage);
     }
     if (user) {
       fetchData();
@@ -36,7 +111,7 @@ const MessagesProvider = ({ children }) => {
     else {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, init, receiveMessage]);
 
   // load messages from conversation
   const loadConversation = async (id) => {
@@ -62,7 +137,7 @@ const MessagesProvider = ({ children }) => {
   )
 
   return (
-    <MessagesContext.Provider value={{ conversations, loading, loadConversation }}>
+    <MessagesContext.Provider value={{ conversations, loading, loadConversation, sendMessage, markConversationRead }}>
       {children}
     </MessagesContext.Provider>
   );

@@ -1,14 +1,16 @@
 import { Avatar, IconButton, List, makeStyles, Menu, MenuItem, Typography } from '@material-ui/core';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useMemo } from 'react';
 import ConversationListItem from './ConversationListItem';
 import getContext from '../../contexts/getContext';
 import UserSearch from './UserSearch';
+import { compareDesc, parseJSON } from 'date-fns';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    margin: '2em',
+    padding: '2em',
     display: 'flex',
-    flexFlow: 'column nowrap'
+    flexFlow: 'column nowrap',
+    height: '100vh'
   },
   conversationList: {
     flexGrow: 2,
@@ -43,11 +45,14 @@ const ConversationList = () => {
   const [anchor, setAnchor] = useState(null);
 
   const lastUpdated = (conversation) => {
-    return conversation.messages[conversation.messages.length - 1].timestamp;
+    return parseJSON(conversation.messages[conversation.messages.length - 1].createdAt);
   }
 
-  const sortedConversationIds = Object.keys(conversations)
-    .sort((a, b) => +lastUpdated(conversations[b]) - +lastUpdated(conversations[a]));
+  const sortedConversationIds = useMemo(() => Object.keys(conversations)
+    .sort((a, b) => compareDesc(
+      lastUpdated(conversations[a]),
+      lastUpdated(conversations[b])
+    )), [conversations]);
   
   const handleClick = (e) => {
     setAnchor(e.currentTarget);

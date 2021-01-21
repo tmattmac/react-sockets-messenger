@@ -1,5 +1,5 @@
 import { Avatar, Chip, ListItem, ListItemAvatar, ListItemText, makeStyles } from '@material-ui/core';
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import getContext from '../../contexts/getContext';
 import clsx from 'clsx';
@@ -19,7 +19,8 @@ const useStyles = makeStyles(theme => ({
   ellipsis: {
     whiteSpace: 'nowrap',
     overflow: 'hidden',
-    textOverflow: 'ellipsis'
+    textOverflow: 'ellipsis',
+    marginRight: '1em'
   }
 }));
 

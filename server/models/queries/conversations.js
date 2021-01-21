@@ -60,8 +60,15 @@ async function getConversationByUsers(usernames) {
   return null;
 }
 
+function markConversationRead(username, conversationId) {
+  ConversationUser.update({ read: true }, {
+    where: { conversationId, username }
+  });
+}
+
 module.exports = {
   getConversations,
   getConversationById,
-  getConversationByUsers
+  getConversationByUsers,
+  markConversationRead
 };
