@@ -1,89 +1,103 @@
-import { Typography, Avatar, makeStyles } from '@material-ui/core';
-import React, { useContext, useRef, useLayoutEffect } from 'react';
-import getContext from '../../contexts/getContext';
-import clsx from 'clsx';
-import formatTime from '../../helpers/formatTime';
+import { Avatar, makeStyles, Typography } from "@material-ui/core";
+import clsx from "clsx";
+import React, { useContext, useLayoutEffect, useRef } from "react";
+import getContext from "../../contexts/getContext";
+import formatTime from "../../helpers/formatTime";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    margin: '3em',
-    flex: '1 1 auto',
+    margin: "3em",
+    flex: "1 1 auto",
     height: 0,
-    overflowY: 'auto'
+    overflowY: "auto",
   },
   message: {
-    display: 'flex',
-    flexFlow: 'row no-wrap'
+    display: "flex",
+    flexFlow: "row nowrap",
   },
   rightJustify: {
-    justifyContent: 'flex-end'
+    justifyContent: "flex-end",
   },
   alignRight: {
-    textAlign: 'right'
+    textAlign: "right",
   },
   messageHeader: {
-    color: '#BECCE2',
-    fontWeight: 'bold'
+    color: "#BECCE2",
+    fontWeight: "bold",
   },
   messageText: {
-    fontWeight: 'bold',
-    color: 'white',
-    background: 'linear-gradient(to top right, #3A8DFF, #6CC1FF)',
-    borderRadius: '0 10px 10px 10px',
-    padding: '0.75em 1em',
-    marginTop: '0.5em',
-    marginBottom: '1.5em'
+    fontWeight: "bold",
+    color: "white",
+    background: "linear-gradient(to top right, #3A8DFF, #6CC1FF)",
+    borderRadius: "0 10px 10px 10px",
+    padding: "0.75em 1em",
+    marginTop: "0.5em",
+    marginBottom: "1.5em",
+    display: "inline-block",
   },
   messageTextFromUser: {
-    color: '#91A3C0',
-    background: '#F4F6FA',
-    borderRadius: '10px 10px 0 10px'
+    color: "#91A3C0",
+    background: "#F4F6FA",
+    borderRadius: "10px 10px 0 10px",
   },
   avatar: {
-    width: '30px',
-    height: '30px',
-    margin: '0.5em'
-  }
+    width: "30px",
+    height: "30px",
+    margin: "0.5em",
+  },
 }));
 
 const MessageList = ({ messages }) => {
   const classes = useStyles();
-  const { user } = useContext(getContext('user'));
+  const { user } = useContext(getContext("user"));
 
   const bottomOfPage = useRef();
 
   useLayoutEffect(() => {
     bottomOfPage.current.scrollIntoView();
   });
-  
-  return ( 
+
+  return (
     <div className={classes.root}>
-      {messages.map(message => {
+      {messages.map((message, i) => {
         const isFromUser = message.fromUser === user;
         const time = formatTime(message.createdAt);
         return (
-          <div key={message.createdAt} className={clsx(classes.message, {
-            [classes.rightJustify]: isFromUser
-          })}>
-            {!isFromUser && <Avatar className={classes.avatar}>{message.fromUser.toUpperCase()[0]}</Avatar>}
+          <div
+            key={message.createdAt}
+            className={clsx(classes.message, {
+              [classes.rightJustify]: isFromUser,
+            })}
+          >
+            {!isFromUser && (
+              <Avatar className={classes.avatar}>
+                {message.fromUser.toUpperCase()[0]}
+              </Avatar>
+            )}
             <div>
-              <Typography variant='body2' className={clsx(classes.messageHeader, {
-                [classes.alignRight]: isFromUser
-              })}>
+              <Typography
+                variant="body2"
+                className={clsx(classes.messageHeader, {
+                  [classes.alignRight]: isFromUser,
+                })}
+              >
                 {!isFromUser && message.fromUser} {time}
               </Typography>
-              <Typography variant='body1' className={clsx(classes.messageText, {
-                [classes.messageTextFromUser]: isFromUser
-              })}>
+              <Typography
+                variant="body1"
+                className={clsx(classes.messageText, {
+                  [classes.messageTextFromUser]: isFromUser,
+                })}
+              >
                 {message.text}
               </Typography>
             </div>
           </div>
-        )
+        );
       })}
       <div ref={bottomOfPage}></div>
     </div>
   );
-}
- 
+};
+
 export default MessageList;
